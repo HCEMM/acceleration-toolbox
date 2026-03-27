@@ -179,3 +179,44 @@ Keep one consistent example dataset
 Use diagrams for pipeline flow
 Expect environment/setup issues → prepare backups
 ```
+
+
+Course outline:
+```
+0. Introduction (1st day, morning)
+Currently running steps manually --> slow pipelinesreproducibility issues
+versions dependency problems
+hard to scale
+we need tools that makes our lifes easier in bioinformatics
+
+1. Git/Github (1st day afternoon)
+Register/login to github (Github Desktop or Github website)
+create a new repo (everyone creates their own)
+clone or download to the working dir (we have to think about password tokens here, username and password would be so much easier)
+work the rest of the class into this repo (example commands to use: clone commit fetch, push etc.)
+
+2. Containers (2nd day)
+Why?
+make one Dockerfile
+compile image to container, push the image to repository
+run one simple thing in the container, eg a fixed version of fastqc
+3. CI/CD settings on Git (2nd day, or some parts in 3rd)
+
+setup a really easy test case
+check settings and options for CI/CD
+run a really simple test commit and inspect if the auto check fails or not
+
+4. Nextflow (whole 3rd day + 4th day if needed)
+re-create the RNA-seq pipeline but with Nextflow
+commit all the files again to the repo
+explain pipelines, input output channels, settings config, HPC/cloud options etc.
+test the auto pipeline with 1-2 fastq files (fastqc, multiqc, trimming, salmon, Deseq2 pipeline)
+inspect the intermediate files, check auto-submitted jobs, memory CPU needs etc...
+check or create a CI/CD rule for our nextflow pipeline
+
+5. nf-core/rnaseq (4th day end of course)
+on same data just setup everything and run
+standardized pipelines are good and easy to use! :slightly_smiling_face:
+inspect outputs etc.
+End of workshop [~4 day course]
+```
