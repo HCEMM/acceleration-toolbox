@@ -4,7 +4,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: wranders/markdown-to-pages-action@v1
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.my_token }}
         files: |-
           README.md
           test/README.md
