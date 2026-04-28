@@ -4,12 +4,9 @@ jobs:
     - uses: actions/checkout@v4
     - uses: wranders/markdown-to-pages-action@v1
       with:
-        token: ${{ secrets.my_token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         files: |-
           README.md
-          test/README.md
-          test/nested/readme.md
-    - run: cp ./images ./dist/images/
     - uses: actions/upload-pages-artifact@v3
       with:
         path: dist
