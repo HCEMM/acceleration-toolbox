@@ -50,162 +50,24 @@ Nextflow is built around processes and channels. It focuses on how data flows fr
 | Parallelism    | Built-in (channels)      | Built-in (DAG)           |
 | Containers     | Native & tightly integrated           | Supported                |
 
-Each step may use different tools (e.g., Bash, Python, R), and these steps must be executed in the correct order.
+### Design Principles for Scalable Workflows
+**1. Separation of Concerns**
+A robust workflow explicitly separates the science from the software engineering:
+- Business Logic (The Science): Your individual scripts (Python, R, Bash) handle the actual computation and data manipulation.
+- Execution Logic (The Pipeline): The workflow manager decides when, where, and how to run those scripts.
 
-For small projects, you might run everything manually. But as workflows grow, this quickly becomes:
+**2. The Scatter-Gather Pattern**
+This is a fundamental pattern for parallelizing data science workflows:
+- Scatter: Split a large dataset into independent chunks (e.g., separating RNA-seq data by individual samples).
+- Process: Run the identical analysis step on each chunk simultaneously in parallel.
+- Gather: Combine the independent results back together for the final analysis.  
 
-- Hard to track  
-- Error-prone  
-- Difficult to reproduce  
+Workshop Roadmap
+In this workshop, you will move from theory to practice. By the end of this session, you will understand how modern bioinformatics pipelines are designed and executed.
 
-Workflow managers solve this problem by **automating and organizing complex pipelines**.
-
----
-
-### Why Do We Need Them?
-
-In real-world data science workflows:
-
-- Steps depend on outputs from previous steps  
-- Some tasks require different software environments  
-- Some steps are computationally intensive (HPC / cloud)  
-- You may need to rerun only parts of the pipeline  
-
-Without automation, you must manually:
-
-- Track dependencies  
-- Remember execution order  
-- Re-run steps when inputs change  
-
-Workflow managers handle all of this for you.
-
----
-
-### Key Idea: Pipelines as Graphs
-
-A workflow can be thought of as a **Directed Acyclic Graph (DAG)**:
-
-- Nodes = tasks (scripts, tools)  
-- Edges = dependencies between tasks  
-
-Workflow managers:
-
-- Automatically determine execution order  
-- Run independent steps in parallel  
-- Only rerun steps when necessary  
-
----
-
-### Meet the Tools: Nextflow and Snakemake
-
-There are many workflow systems, but two of the most widely used in bioinformatics are:
-
-- **Nextflow**
-- **Snakemake**
-
-Both help you:
-
-- Organize pipelines  
-- Automate execution  
-- Ensure reproducibility  
-- Scale from laptop → cluster → cloud  
-
----
-
-### Key Differences
-
-#### Nextflow (Process-Oriented)
-
-- Built around **processes** and **channels**
-- Data flows between steps
-- Strong integration with containers (Docker, Apptainer)
-- Well-suited for scalable, production pipelines
-
-Conceptually:
-> “Take input → process it → send output downstream”
-
----
-
-#### Snakemake (File-Oriented)
-
-- Built around **rules** and **files**
-- Defines relationships between input/output files
-- Uses pattern matching (wildcards)
-- Feels natural for Python users
-
-Conceptually:
-> “To create this file → run this rule”
-
----
-
-### Execution Model (Simplified)
-
-| Feature        | Nextflow                  | Snakemake                |
-|----------------|--------------------------|--------------------------|
-| Core unit      | Process                  | Rule                     |
-| Focus          | Data flow                | File relationships       |
-| Language       | Groovy-based             | Python-based             |
-| Parallelism    | Built-in (channels)      | Built-in (DAG)           |
-| Containers     | Native support           | Supported                |
-
----
-
-### Why This Matters for Bioinformatics
-
-Bioinformatics pipelines often involve:
-
-- Multiple tools with different dependencies  
-- Large datasets  
-- HPC or cloud environments  
-- Need for reproducibility  
-
-Workflow managers allow you to:
-
-- Combine tools into a single pipeline  
-- Use containers for reproducibility  
-- Scale analyses easily  
-- Share pipelines with others  
-
----
-
-### Key Concept: Separation of Concerns
-
-A good workflow separates:
-
-- **Business logic** → scripts (Python, R, Bash)  
-- **Execution logic** → workflow manager  
-
-This means:
-
-- Scripts do the computation  
-- Workflow managers decide *when* and *how* to run them  
-
----
-
-### Parallelization: Scatter-Gather Pattern
-
-A common pattern in workflows:
-
-1. **Scatter**: split data into independent chunks  
-2. **Process in parallel**  
-3. **Gather**: combine results  
-
-Example (RNA-seq analogy):
-
-- Samples processed independently → merged later  
-
-This is essential for scaling analyses efficiently.
-
----
-
-### What You Will Do in This Workshop
-
-In this workshop, you will:
-
-- Learn the basics of workflow managers  
-- Build modular pipeline components  
-- Use containers for reproducibility  
-- Collaborate on a shared pipeline  
-- Implement a workflow using **Nextflow**
-
-By the end, you will understand how modern bioinformatics pipelines are designed and executed.
+You and your group will:
+- Learn the basics: Understand the mechanics of workflow managers.
+- Build modular components: Create individual, containerized steps of a pipeline.
+- Ensure reproducibility: Use Docker/Apptainer containers to lock down software versions.
+- Collaborate: Share your modules through GitHub and Docker Hub.
+- Implement Nextflow: Combine everything into a fully functional, automated Nextflow pipeline.
