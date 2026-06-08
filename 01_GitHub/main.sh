@@ -13,4 +13,4 @@ bash 01_GitHub/scripts/03-annotation.sh "$OUTPUT_DIR" "$WORKING_DIR/data/db_trim
 
 bash 01_GitHub/scripts/04-build-matrix.sh "$OUTPUT_DIR"
 
-bash 01_GitHub/scripts/05-multiqc.sh "$OUTPUT_DIR" "$WORKING_DIR/data/multiqc_config.yaml"
+bash 01_GitHub/scripts/05-build-report.sh "$OUTPUT_DIR" "$WORKING_DIR/data/multiqc_config.yaml"
