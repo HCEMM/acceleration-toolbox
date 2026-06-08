@@ -1,5 +1,5 @@
 #!/bin/bash
 
-wget "https://rest.uniprot.org/uniprotkb/stream?compressed=true&format=fasta&query=%28glucocorticoid-responsive+genes%29" -O 01_GitHub/data/db/db.fasta.gz
-zcat 01_GitHub/data/db/db.fasta.gz | awk '{print $1}' | gzip > 01_GitHub/data/db/db_trimmed.fasta.gz
-diamond makedb --in 01_GitHub/data/db/db_trimmed.fasta.gz -d 01_GitHub/data/db/db_trimmed.dmnd
+wget "https://rest.uniprot.org/uniprotkb/stream?compressed=true&format=fasta&query=%28glucocorticoid-responsive+genes%29" -O 01_GitHub/data/db.fasta.gz
+zcat 01_GitHub/data/db.fasta.gz | awk '{print $1}' | gzip > 01_GitHub/data/db_trimmed.fasta.gz
+diamond makedb --in 01_GitHub/data/db_trimmed.fasta.gz -d 01_GitHub/data/db_trimmed.dmnd
