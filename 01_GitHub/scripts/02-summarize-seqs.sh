@@ -22,9 +22,9 @@ do
     # FOR EACH FILE, RUN seqkit stats, AND APPEND THE OUTPUT TO $OUTPUT_FILENAME
     # tips below
     
-    seqkit stats -T "$FILE" --threads "$THREADS" \
-    | tail -n +2 \
-    | awk -v sample="$SAMPLE" -v OFS='\t' '{print sample, $2, $3, $4, $5, $6, $7, $8}' >> "$OUTPUT_FILENAME"
+    seqkit ... \
+    | tail ... \
+    | awk ... >> "$OUTPUT_FILENAME"
 done
 
 # Check if the summary file was generated and contains 12 lines of data (excluding header), and exit code 1 if not
