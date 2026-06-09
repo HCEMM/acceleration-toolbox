@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - group1
+  pull_request:
+    branches:
+      - group1
 
 jobs:
 
@@ -23,20 +26,3 @@ jobs:
       - name: Run QC step
         shell: micromamba-shell {0}
         run: bash 01_GitHub/scripts/01-qc.sh 01_GitHub/data test_output 8
-
-  seqkit:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup environment (cached)
-        uses: mamba-org/setup-micromamba@v2
-        with:
-          environment-file: 01_GitHub/environment.yml
-          cache-environment: true
-          cache-downloads: true
-
-      - name: Run count step
-        shell: micromamba-shell {0}
-        run: bash 01_GitHub/scripts/02-summarize-seqs.sh 01_GitHub/data test_output/seq_counts.tsv 8

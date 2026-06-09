@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - group5
+  pull_request:
+    branches:
+      - group5
 
 jobs:
 
