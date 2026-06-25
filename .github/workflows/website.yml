@@ -1,4 +1,4 @@
-name: Make me a nice webpage    # can be whatever, but always nice to name your stuff
+ame: Make me a nice webpage    # can be whatever, but always nice to name your stuff
 
 on:                       # when should this action be performed? 
   push:                   # 1. when code is pushed normally (add, commit, push)
