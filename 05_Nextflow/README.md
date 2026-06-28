@@ -150,22 +150,39 @@ workflow {
 
 ----------------
 
-Now work in groups
-and build the process files
-Group 1. QC
-Group 2. trimming
-Group 3. Salmon
-Group 4. R (limma)
+### Step 2: Nextflow Directives & Data Types
+**1. Directives and Task Variables**
 
-push to your branch
+Directives control the environment and behavior of your specific process.
 
-pull reqeust merge request
+**A. Global Implicit Variables**
+- ```publishDir```: By default, Nextflow hides all generated files in temporary working directories. If you want to keep a file (like a final report or a BAM file), you must use publishDir to route it to your results folder.
 
-CICD tests??
+> Example: ```publishDir "${params.outdir}/fastqc", mode: 'copy'```
+- ```launchDir```: This points to the directory where the user actually typed ```nextflow run ...``` in their terminal.
+- ```workDir```: Points to the path of the temporary scratch directory (usually ```work/```)
+- ```params```: The global parameter dictionary. Any variable prefixed with ```params.``` (like ```params.reads```) can be dynamically overridden by the user from the command line using ```--reads```.
 
-Run the whole pipeline...
-Inspect work directories and outputs...
-Done
+**B. The task's implicit variables**
+- ```task.cpus``` and ```task.memory```: These are dynamic global variables. Instead of hardcoding threads 4 in your Bash script, use ${task.cpus}. Nextflow pulls the value directly from your nextflow.config file, making your code highly scalable.
+
+**C. Process Directives**
+- ```tag```: This is used for logging. Instead of Nextflow printing [7b/3a1c9f] process > FASTQC (1) to the terminal, you can add tag "Running FastQC on $sample_id". The terminal will then print exactly which sample is currently being processed.
+- ```container```: If you aren't defining your Apptainer/Docker containers globally in the nextflow.config, you define them at the process level using this directive (e.g., ```container 'biocontainers/fastqc:v0.11.9_cv8'```).
+- ```errorStrategy```: Tells Nextflow what to do if a tool crashes. Options include ```terminate``` (default, kills the pipeline), ```ignore``` (skips it and keeps going), or ```retry```.
+- ```maxRetries```: Used in tandem with errorStrategy: ```retry```. You can tell Nextflow to try running a failed job 2 or 3 times before finally giving up (great for HPC environments where nodes drop randomly).
+
+**2. Input and Output Types**
+Nextflow needs to know exactly what kind of data is flowing into and out of your process so it can stage the files correctly in the temporary work directories.
+|Type|Description|Examples Use Case|
+|----|-----------|-----------------|
+|```val```|A simple value or string. It is not a file.|Passing a sample ID: ```val(sample_id)```|
+|```path```|A physical file or directory path. Nextflow will symlink this into the task's execution folder.|Passing a FASTQ file: ```path(fastq_file)```|
+|```tuple```|A logical grouping of multiple elements that must travel together through an input channel. |Pairing an ID with its files: ```tuple val(sample_id), path(reads)```|
+```env```|Captures an environment variable set in the script block.|```env(MY_VAR)```|
+```stdout```|Captures standard output printed to the terminal.| *stdout*|
+
+----------------------
 
 ### Step 3: Group Work — Build Your Processes!
 Now it is time to get hands-on. Break into your assigned groups. Your goal is to take your hollow .nf process files and turn them into fully functional Nextflow modules, utilizing the exact container commands you perfected earlier.
