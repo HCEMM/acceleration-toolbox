@@ -50,4 +50,4 @@
 
 ## </> Coding Activity
 
-![Wakatime stats](https://wakatime.com/share/@9df5474f-901f-443d-9776-1058a3fcb90b/f804fbc3-dee2-405b-9668-17d8bd988382.svg)
+[![My GitHub stats](https://github-stats-extended.vercel.app/api?username=iquasere)](https://github.com/stats-organization/github-stats-extended)
