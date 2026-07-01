@@ -1,0 +1,4 @@
+fastqc-g1 | hcemm/bioinfo-workshop:fastqc
+trimming-g2 | hcemm/bioinfo-workshop:trimming
+salmon-g3 | hcemm/bioinfo-workshop:salmon
+limma-g4 | hcemm/bioinfo-workshop:limma
