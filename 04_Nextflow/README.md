@@ -6,6 +6,11 @@ In previous sessions, we containerized individual bioinformatics tools. Here, we
 
 **The Workspace**: [```HCEMM/rnaseq-nextflow```](https://github.com/HCEMM/rnaseq-nextflow) repository (Groups 1-4).
 
+<img width="517" height="561" alt="image" src="https://github.com/user-attachments/assets/29096289-52f6-4480-861f-dee23e09494b" />
+
+*Source: [HBCTraining - Pseudoaligners](https://hbctraining.github.io/Intro-to-rnaseq-hpc-gt/lessons/10_salmon.html)*
+
+
 ### Part 1: Pipeline Architecture
 A standard Nextflow repository relies on two central files to control execution and configuration, isolating the "how" from the "where."
 
@@ -17,7 +22,6 @@ Directory Overview:
 - ```/data``` (Input datasets and references)
 - ```/results``` (Where the final outputs will be saved)
 
------------------------
 
 ### 1. ```nextflow.config``` (Infrastructure and Resources)
 
@@ -72,7 +76,7 @@ apptainer {
 
 </details>
 
-----------
+
 
 ### 2. ```main.nf``` (The Master Workflow)
 
