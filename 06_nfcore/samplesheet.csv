@@ -1,0 +1,7 @@
+sample,fastq_1,fastq_2,strandedness
+Control_08,/common/workshop_data/workshop_ready/SRR1039508_workshop_1.fastq.gz,/common/workshop_data/workshop_ready/SRR1039508_workshop_2.fastq.gz,auto
+Control_12,/common/workshop_data/workshop_ready/SRR1039512_workshop_1.fastq.gz,/common/workshop_data/workshop_ready/SRR1039512_workshop_2.fastq.gz,auto
+Control_20,/common/workshop_data/workshop_ready/SRR1039520_workshop_1.fastq.gz,/common/workshop_data/workshop_ready/SRR1039520_workshop_2.fastq.gz,auto
+Treated_09,/common/workshop_data/workshop_ready/SRR1039509_workshop_1.fastq.gz,/common/workshop_data/workshop_ready/SRR1039509_workshop_2.fastq.gz,auto
+Treated_17,/common/workshop_data/workshop_ready/SRR1039517_workshop_1.fastq.gz,/common/workshop_data/workshop_ready/SRR1039517_workshop_2.fastq.gz,auto
+Treated_21,/common/workshop_data/workshop_ready/SRR1039521_workshop_1.fastq.gz,/common/workshop_data/workshop_ready/SRR1039521_workshop_2.fastq.gz,auto
