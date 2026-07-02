@@ -75,4 +75,4 @@ You and your group will:
 ------------------
 |Previous|Home|Next|
 |--------|----|----|
-|[CI/CD](../03_CICD/README.md)|[Home](../README.md)|[Nextflow](../05_Nextflow/README.md)
+|[Containers](../02_Containers/README.md)|[Home](../README.md)|[Nextflow](../04_Nextflow/README.md)
