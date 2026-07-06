@@ -9,6 +9,7 @@
 - 🔄 Nextflow workflows
 - 🧬 nf-core pipelines
 changed
+
 ### Workshop Roadmap
 1. Introduction
     - Why modern bioinformatics tools and workflow managers matter?
