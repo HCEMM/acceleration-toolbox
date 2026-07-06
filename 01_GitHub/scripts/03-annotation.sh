@@ -14,16 +14,13 @@ echo "Running annotation against database of glucocorticoid-responsive genes"
 
 for FILE in "$READS_DIR"/*.fastq.gz; 
 do 
-    
     echo "Annotating file: $FILE"
 
     # GROUP 3 - WRITE HERE THE COMMAND TO RUN DIAMOND BLASTX
-    # READS ARE GZIPPED AT $READS_DIR
-    # OUTPUT SHOULD GO TO $RESULTS_DIR, WITH FILENAME FORMAT: sample_matches.tab
-    # USE $DB AS THE DIAMOND DATABASE, $THREADS FOR THREADS, AND $MAX_TARGET_SEQS FOR MAX TARGET SEQS
-    # OUTFMT SHOULD BE 6 (TABULAR)
-    # tips below
-    # Run DIAMOND blastx
+    # Explicitly declare and assign the variable safely
+    SAMPLE_NAME=$(basename "$FILE" .fastq.gz)
+    
+    # Run DIAMOND blastx using the verified variable
     diamond blastx \
         --query "$FILE" \
         --db "$DB" \
@@ -32,7 +29,6 @@ do
         --max-target-seqs "$MAX_TARGET_SEQS" \
         --outfmt 6
 
-    
 done
 
 # check if 12 annotation results were generated, and exit code 1 if not
