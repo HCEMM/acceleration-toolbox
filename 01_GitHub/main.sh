@@ -8,7 +8,7 @@ THREADS=8
 
 bash 01_GitHub/scripts/.sh "$WORKING_DIR"/data "$OUTPUT_DIR" "$THREADS"
 
-bash 01_GitHub/scripts/.sh "$WORKING_DIR"/data "$OUTPUT_DIR"/seq_counts.tsv "$THREADS"
+bash 01_GitHub/scripts/02-summarize-seqs.sh "$WORKING_DIR"/data "$OUTPUT_DIR"/seq_counts.tsv "$THREADS"
 
 bash 01_GitHub/scripts/.sh "$WORKING_DIR"/data "$OUTPUT_DIR" "$WORKING_DIR/data/db_trimmed.dmnd" "$THREADS"
 
