@@ -11,7 +11,6 @@ echo "Summarizing sequence statistics with SeqKit"
 mkdir -p "$(dirname "$OUTPUT_FILENAME")"
 echo -e "Sample\tFormat\tType\tNum_Seqs\tTotal_Length\tMin_Length\tAvg_Length\tMax_Length" > "$OUTPUT_FILENAME"
 
-module load seqkit
 for FILE in "$READS_DIR"/*.fastq.gz
 do    
     echo "Processing file: $FILE"
@@ -29,7 +28,6 @@ do
    # | tail ... \
    # | awk ... >> "$OUTPUT_FILENAME"
 done
-module unload seqkit
 
 # Check if the summary file was generated and contains 12 lines of data (excluding header), and exit code 1 if not
 if [ $(wc -l < "$OUTPUT_FILENAME") -ne $((N_FILES + 1)) ]; then
