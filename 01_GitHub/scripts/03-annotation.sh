@@ -19,6 +19,7 @@ do
     diamond blastx -d "$DB" -q "$FILE" -o "$RESULTS_DIR"/$(basename "$FILE" .fastq.gz)_matches.tab --threads "$THREADS" --max-target-seqs "$MAX_TARGET_SEQS" --outfmt 6
 done
 
+
 # check if 12 annotation results were generated, and exit code 1 if not
 if [ $(ls "$RESULTS_DIR"/*_matches.tab | wc -l) -ne $N_FILES ]; then
     echo "Error: Not all annotation results were generated. Expected $N_FILES, but found $(ls "$RESULTS_DIR"/*_matches.tab | wc -l)."
