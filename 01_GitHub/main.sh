@@ -12,6 +12,6 @@ bash 01_GitHub/scripts/.sh "$WORKING_DIR"/data "$OUTPUT_DIR"/seq_counts.tsv "$TH
 
 bash 01_GitHub/scripts/.sh "$WORKING_DIR"/data "$OUTPUT_DIR" "$WORKING_DIR/data/db_trimmed.dmnd" "$THREADS"
 
-bash 01_GitHub/scripts/.sh "$OUTPUT_DIR" "$OUTPUT_DIR"
+bash 01_GitHub/scripts/04-build-matrix.sh "$OUTPUT_DIR" "$OUTPUT_DIR"
 
 bash 01_GitHub/scripts/.sh "$OUTPUT_DIR" "$OUTPUT_DIR" "$WORKING_DIR/data/multiqc_config.yaml"
