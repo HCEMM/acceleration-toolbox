@@ -27,5 +27,5 @@ jobs:
         shell: micromamba-shell {0}
         run: |
           bash 01_GitHub/scripts/00-download-db.sh
-          bash 01_GitHub/scripts/03-annotation.sh 01_GitHub/data test_output 01_GitHub/data/db_trimmed.dmnd 8
+          bash 01_GitHub/working_scripts/03-annotation.sh 01_GitHub/data test_output 01_GitHub/data/db_trimmed.dmnd 8
   
