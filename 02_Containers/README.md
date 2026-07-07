@@ -536,9 +536,9 @@ remote downloads during build
 
 5. Build an image from a Dockerfile, with bowtie2 available inside, and run it to explore its contents
 
-(tip) bowtie2 requires build-essential, zlib1g-dev, libtbb-dev, and libsimde-dev
-(tip) bowtie2 source code can be downloaded from GitHub
-(tip) bowtie2 can be compiled with make
+- (tip) bowtie2 requires build-essential, zlib1g-dev, libtbb-dev, and libsimde-dev
+- (tip) bowtie2 source code can be downloaded from GitHub
+- (tip) bowtie2 can be compiled with make
 
 6. Run the same image, but see a file from your own system
 
