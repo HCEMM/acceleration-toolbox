@@ -1,0 +1,23 @@
+1.apptainer pull docker://quay.io/biocontainers/samtools:1.20--h50ea8bc_1
+2.apptainer inspect samtools_1.20--h50ea8bc_1.sif
+apptainer shell samtools_1.20--h50ea8bc_1.sif
+3.apptainer exec seqkit_2.13.0--he881be0_0.sif seqkit stat 01_GitHub/data/SRR1039508_1.fastq.gz 
+4.mkdir -p container_test/data
+echo "hello container" > container_test/data/example.txt
+apptainer exec samtools.sif cat data/example.txt
+5.
+FROM continuumio/miniconda3
+RUN conda install -y -c conda-forge cowsay
+WORKDIR /work
+CMD ["/bin/bash"]
+
+docker build -t my-first-image .
+
+docker login
+docker tag my-first-image SERNAME/my-first-image
+docker push USERNAME/my-first-image
+
+apptainer pull docker://USERNAME/my-first-image
+apptainer shell my-first-image_latest.sif
+
+6. apptainer pull docker://hello-world

@@ -236,6 +236,49 @@ CMD ["[tool-or-executable]", "[flag]", "[argument]"]
 # ENTRYPOINT ["[tool-or-executable]"]
 ```
 
+# Dockerfile directives vs Docker command-line options
+
+A Docker image is created in two stages:
+
+1. **Build time**: instructions in the `Dockerfile` create the image.
+2. **Run time**: command-line options modify how a container starts.
+
+Some things belong only in the Dockerfile (`RUN`, `COPY`, `ENV`, etc.), while others are runtime choices (`-v`, `--rm`, `--cpus`, etc.).
+
+The following example creates a small bioinformatics container.
+
+**Q: What would be the command-line equivalent to `FROM ubuntu:24.04`?**
+
+---
+
+# Example Dockerfile
+
+```dockerfile
+FROM ubuntu:24.04
+
+LABEL description="A bioinformatics container"
+
+RUN apt-get update && \
+    apt-get install -y \
+        samtools \
+        bcftools \
+        wget \
+        && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /analysis
+
+COPY scripts/ /usr/local/bin/
+
+ENV TOOL_NAME="bio-container"
+
+VOLUME ["/data"]
+
+ENTRYPOINT ["bash"]
+```
+To build the image: `docker build -t bio .`
+
+
+
 3.1 Why is it better to use python:slim instead of full ubuntu? 
 
 <details> <summary><b>Answer</b></summary>
@@ -480,6 +523,20 @@ remote downloads during build
 👉 If those change or disappear, builds may break even if the container definition is unchanged.
 
 </details>
+
+# Exercises
+
+1. Pull your first BioContainer: biocontainers/samtools:1.20--h50ea8bc_1 (tip: to pull from dockerhub use docker://; to pull from quay use quay.io/biocontainers/)
+
+2. Inspect a container, and enter it's filesystem
+
+3. Pull a seqkit container, and run it to get stats on a FastQ file
+
+4. Create a file, and print it from inside the container
+
+5. Build an image from a Dockerfile, and run it to explore its contents
+
+6. Run the same image, but see a file from your own system
 
 ------------------
 |Previous|Home|Next|
