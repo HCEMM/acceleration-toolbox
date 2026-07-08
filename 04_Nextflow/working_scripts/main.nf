@@ -3,7 +3,7 @@
 nextflow.enable.dsl=2
 
 // --- PARAMETERS ---
-params.reads         = "/scratch/jsequeira/sznistvan/data/rnaseq/bioinformatics_hpc/workshop_ready/*_workshop_{1,2}.fastq.gz"
+params.reads         = "/common/2nd_workshop/*_workshop_{1,2}.fastq.gz"
 params.transcriptome = "$projectDir/data/Homo_sapiens.GRCh38.cdna.all.fa"
 params.metadata      = "$projectDir/data/samples.csv"       // Added: Required for R (limma)
 params.tx2gene       = "$projectDir/data/tx2gene/tx2gene.csv"       // Added: Required for R (tximport)
