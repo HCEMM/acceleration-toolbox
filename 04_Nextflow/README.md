@@ -26,133 +26,18 @@ Directory Overview:
 
 ### 1. ```nextflow.config``` (Infrastructure and Resources)
 
-This file dictates execution rules: job scheduling, CPU/RAM allocation, and container integration.
-
-<details><summary>Show me the nextflow.config file!</summary>
-    
-```
-// 1. Executor Settings (HPC Job Scheduler)
-executor {
-    name = 'slurm'
-    queueSize = 100            // Max jobs in SLURM queue at once
-    submitRateLimit = '10 sec' // Throttle job submission to not overwhelm the scheduler
-}
-
-// 2. Process Resource Allocations
-process {
-    executor = 'slurm'
-    // queue = 'standard'      // Uncomment and change to your HPC's specific partition if needed
-
-    // Default fallback resources
-    cpus = 1
-    memory = '2 GB'
-    time = '1h'
-
-    // Tool-specific resource limits
-    withName: 'FASTQC' {
-        cpus = 2
-        memory = '4 GB'
-    }
-    withName: 'TRIMMOMATIC' {
-        cpus = 4
-        memory = '8 GB'
-    }
-    withName: 'SALMON_QUANT' {
-        cpus = 6
-        memory = '12 GB'
-    }
-    withName: 'R_SUMMARY' {
-        cpus = 1
-        memory = '4 GB'
-    }
-}
-
-// 3. Enable Apptainer (Singularity)
-apptainer {
-    enabled = true
-    autoMounts = true
-    runOptions = '--bind /scratch' // Ensure the HPC scratch space is visible inside the container
-}
-```
-
-</details>
-
+[nextflow.config](https://github.com/HCEMM/rnaseq-nextflow/blob/developer/nextflow.config) dictates execution rules: job scheduling, CPU/RAM allocation, and container integration.
 
 
 ### 2. ```main.nf``` (The Master Workflow)
 
-This script orchestrates data flow using *Nextflow Channels*. It imports modules and wires tool outputs to downstream inputs.
-
-<details><summary>Show me the main.nf file!</summary>
-    
-```
-#!/usr/bin/env nextflow
-
-nextflow.enable.dsl=2
-
-// --- PARAMETERS ---
-// These can be overridden in the command line using e.g., --reads "/path/to/reads"
-params.reads         = "/scratch/jsequeira/sznistvan/data/rnaseq/bioinformatics_hpc/workshop_ready/*_workshop_{1,2}.fastq.gz"
-params.transcriptome = "$projectDir/data/Homo_sapiens.GRCh38.cdna.all.fa"
-params.metadata      = "$projectDir/data/samples.csv"       // Required for R (limma/DESeq2)
-params.tx2gene       = "$projectDir/data/tx2gene/tx2gene.csv" // Required for R (tximport)
-params.outdir        = "$projectDir/results"
-
-// --- MODULE IMPORTS ---
-// Bringing in the modules your groups are building inside the /processes folder
-include { FASTQC }       from './processes/fastqc.nf'
-include { TRIMMOMATIC }  from './processes/trimming.nf'
-include { SALMON_INDEX } from './processes/salmon.nf'
-include { SALMON_QUANT } from './processes/salmon.nf'
-include { MULTIQC }      from './processes/multiqc.nf'
-include { R_ANALYSIS }   from './processes/r_analysis.nf'
-
-
-// --- WORKFLOW ---
-workflow {
-    
-    // 1. Create channels from input data
-    read_pairs_ch    = Channel.fromFilePairs(params.reads, checkIfExists: true).view { "Found sample: ${it[0]}" }   
-    transcriptome_ch = file(params.transcriptome, checkIfExists: true)
-    tx2gene_ch       = file(params.tx2gene, checkIfExists: true)
-    metadata_ch      = file(params.metadata, checkIfExists: true)
-
-    // 2. Quality Control & Trimming
-    FASTQC(read_pairs_ch)
-    TRIMMOMATIC(read_pairs_ch)
-
-    // 3. Transcriptome Indexing & Quantification
-    SALMON_INDEX(transcriptome_ch)
-    
-    // Pass the trimmed reads and the generated index into Salmon Quant
-    SALMON_QUANT(TRIMMOMATIC.out.trimmed_reads, SALMON_INDEX.out.index)
-    
-    // 4. Summarize all Quality Control logs
-    // We mix the outputs from FastQC, Trimmomatic, and Salmon into one channel for MultiQC
-    MULTIQC(
-        FASTQC.out.qc_results.mix(
-            TRIMMOMATIC.out.log,
-            SALMON_QUANT.out.quant_dirs
-        ).collect()
-    )
-
-    // 5. Differential Expression in R
-    // Pass the quantified directories, plus the necessary biological metadata
-    R_ANALYSIS(
-        SALMON_QUANT.out.quant_dirs.collect(),
-        tx2gene_ch,
-        metadata_ch
-    )
-}
-```
-
-</details>
+[main.nf](https://github.com/HCEMM/rnaseq-nextflow/blob/developer/main.nf) orchestrates data flow using **Nextflow Channels**. It imports modules and wires tool outputs to downstream inputs.
 
 ----------------
 
 ### Part 2: Writing Nextflow Processes | Nextflow Directives & Data Types
 
-**Exapmple DAG architecture**
+**Example DAG architecture**
 
 <img width="691" height="686" alt="flowchart" src="https://github.com/user-attachments/assets/78237e23-4b0c-42f4-bab8-e6e8cd9f037a" />
 
