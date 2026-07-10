@@ -2,8 +2,8 @@
 
 ## 0. If Nextflow container cache is getting too big, run these
 ```
-echo -e "\nexport APPTAINER_CACHEDIR=/scratch/jsequeira/jsequeira/.apptainer/cache" >> ~/.bashrc
-echo "export NXF_APPTAINER_CACHEDIR=/scratch/jsequeira/jsequeira/.apptainer/cache" >> ~/.bashrc
+echo -e "\nexport APPTAINER_CACHEDIR=/scratch/<groupname>/<username>/.apptainer/cache" >> ~/.bashrc
+echo "export NXF_APPTAINER_CACHEDIR=/scratch/<groupname>/<username>/.apptainer/cache" >> ~/.bashrc
 source ~/.bashrc
 ```
 
