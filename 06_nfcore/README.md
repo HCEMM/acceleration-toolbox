@@ -1,5 +1,11 @@
 # *nf-core*
 
+## 0. If Nextflow container cache is getting too big, run these
+```
+echo -e "\nexport APPTAINER_CACHEDIR=/scratch/jsequeira/jsequeira/.apptainer/cache" >> ~/.bashrc
+echo "export NXF_APPTAINER_CACHEDIR=/scratch/jsequeira/jsequeira/.apptainer/cache" >> ~/.bashrc
+source ~/.bashrc
+```
 
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/942aaaad-9418-4c50-9142-5803967c00a9" />
 
