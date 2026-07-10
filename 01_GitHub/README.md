@@ -90,6 +90,10 @@ Testing code (also known as [Continuous Integration](https://en.wikipedia.org/wi
 
 [GitHub Actions](https://github.com/features/actions) allows for automated workflows from your repository on GitHub, such as automated testing of your tools, or automated deployment into, e.g., package managers like Bioconda or PyPI. You actually ran GH actions already, when you set up your GitHub Pages.
 
+### 3.3. Final result is a nice MultiQC report with all results
+
+AVailable at: https://hcemm.github.io/acceleration-toolbox/multiqc_report
+
 ------------------
 |Previous|Home|Next|
 |--------|----|----|
