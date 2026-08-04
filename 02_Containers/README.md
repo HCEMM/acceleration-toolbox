@@ -305,13 +305,12 @@ For single-purpose command-line images, an `ENTRYPOINT` can provide a convenient
 
 > **Question 3.8:** When would a fixed `ENTRYPOINT` be useful, and why might it cause problems for a workflow manager?
 
-<img width="1184" height="831" alt="Overview of common Dockerfile instructions" src="https://github.com/user-attachments/assets/2215ba89-df63-43b6-a8a8-818ebf3742f6" />
 
 ---
 
 ## 4. Building and Running Containers: Docker and Apptainer
 
-Docker and Apptainer can execute much of the same packaged software, but they are commonly used in different environments.
+Docker and Apptainer (*formerly Singularity*) can execute much of the same packaged software, but they are commonly used in different environments.
 
 | Feature | Docker | Apptainer |
 |---|---|---|
@@ -346,7 +345,7 @@ docker compose build
 docker compose run --rm seqkit seqkit --help
 ```
 
-The `--rm` option removes the stopped container after the command finishes. It does not delete the image or any results written to a mounted host directory.
+> The `--rm` option removes the stopped container after the command finishes. It does not delete the image or any results written to a mounted host directory.
 
 > **Question 4.1:** Why is `--rm` useful during repeated testing?
 
@@ -385,7 +384,7 @@ The image was originally distributed using the OCI container ecosystem, but it c
 
 ### How will we build images during the workshop?
 
-Students normally do not have permission to run Docker on the HPC. We will therefore use an automated build workflow:
+Since we do not have permission to run Docker on the HPC. We will therefore use an automated build workflow:
 
 1. Write or modify a Dockerfile.
 2. Commit the Dockerfile to the workshop repository.
@@ -478,296 +477,34 @@ This separates the scientific workflow from the computing platform:
 - The container defines **which software environment should be used**.
 - The configuration defines **where and how the process should run**.
 
----
 
-| Previous | Home | Next |
-|---|---|---|
-| [GitHub](../01_GitHub/README.md) | [Home](../README.md) | [Workflow Managers](../03_Workflow_Managers/README.md) |
 
 
 
+# Exercises
 
+1. Pull your first BioContainer: biocontainers/samtools:1.20--h50ea8bc_1 (tip: to pull from dockerhub use docker://; to pull from quay use quay.io/biocontainers/)
 
+2. Inspect a container, and enter it's filesystem
 
+3. Pull a seqkit container, and run it to get stats on a FastQ file
 
+4. Create a file, and print it from inside the container
 
+5. Build an image from a Dockerfile, with bowtie2 available inside, and run it to explore its contents
 
+- (tip) bowtie2 requires build-essential, zlib1g-dev, libtbb-dev, and libsimde-dev
+- (tip) bowtie2 source code can be downloaded from GitHub
+- (tip) bowtie2 can be compiled with make
 
+6. Run the same image, but see a file from your own system
 
 
-------------------
 
-### Containers in Nextflow
 
-Nextflow integrates seamlessly with containers. Instead of installing tools locally, each process in a pipeline can spin up its own container, run the job, and shut down:
 
-```{groovy}
-process FASTQC {
-    container 'your-dockerhub-username/fastqc:latest'
-    
-    script:
-    """
-    fastqc input.fastq
-    """
-}
-```
-
-### 2. Key concepts and DockerHub
-- **Image**: A read-only blueprint containing the OS, software, and dependencies.
-- **Container**: A running, active instance of an image.
-- **Dockerfile**: A simple text script containing the instructions used to build an image.
-- **[DockerHub](https://hub.docker.com)**: "GitHub for Docker images." It is a public registry where developers upload their built images so others can download (pull) and use them. 
-
-<img width="1200" height="594" alt="image" src="https://github.com/user-attachments/assets/0d7ffc96-c457-4631-b3cb-e7d332f6d2c8" />
-
-### 3. Basic Structure of a Dockerfile
-
-A Dockerfile is built layer by layer using specific keywords:
-
-#### FROM
-
-The starting point or base image (e.g., ubuntu:22.04 or python:3.10-slim). Every Dockerfile must start with a FROM statement.
-```
-FROM ubuntu:22.04
-```
-For ML pipelines, you might use a base image that already has Python and some libraries installed:
-```
-FROM python:3.10-slim
-```
-For R pipelines, you might use a base image that already has R installed:
-```
-FROM rocker/r-ver:4.3.1
-```
-Running conda environments
-```
-FROM continuumio/miniconda3:latest
-```
-
-3.1. Why is it better to use python:slim instead of full ubuntu?
-
-3.2. How do you know which base image to use for your tool? 
-
-#### RUN
-
-Executes terminal commands during build.
-
-Update the system and install FastQC in one layer to reduce image size:
-```
-RUN apt-get update && apt-get install -y fastqc
-```
-Important to combine commands with `&&` and clean up cache to reduce image size:
-```
-RUN apt-get update && \
-    apt-get install -y fastqc && \
-    rm -rf /var/lib/apt/lists/*
-```
-3.3. Why is it important to clean up the cache after installing packages?
-
-3.4. Why do we delete /var/lib/apt/lists/*?
-
-#### WORKDIR
-
-Sets the working directory inside the container.
-```
-WORKDIR /data
-```
-
-3.5. What happens if you don’t set WORKDIR?
-
-#### COPY
-
-Copies files from your local machine into the container.
-```
-COPY script.sh /usr/local/bin/script.sh
-```
-
-3.7. Why is COPY preferred over downloading files inside container?
-
-#### ENV
-
-Sets environment variables inside the container.
-```
-ENV PATH="/usr/local/bin:${PATH}"
-ENV LC_ALL=C
-```
-3.6. Why is setting LC_ALL sometimes important in bioinformatics?
-
-#### CMD vs ENTRYPOINT
-
-The default command that runs when the container starts. CMD can be overridden by arguments passed to `docker run`. ENTRYPOINT is used when you want the container to always run a specific command, treating any additional arguments as parameters for that command.
-
-#### CMD (default command)
-
-```
-CMD ["fastqc", "--version"]
-```
-
-#### ENTRYPOINT (fixed tool)
-
-```
-ENTRYPOINT ["fastqc"]
-```
-
-3.7. When would ENTRYPOINT be better than CMD in a bioinformatics container?
-
-<img width="1184" height="831" alt="image" src="https://github.com/user-attachments/assets/2215ba89-df63-43b6-a8a8-818ebf3742f6" />
-
-### 4. Building & Running: Docker vs. Apptainer (HPC)
-
-**If you have Root privileges (e.g., on your personal laptop):**
-You would typically build and test containers using Docker directly:
-```
-cd 02_Containers/seqkit_container
-docker compose build    # or docker compose up --build
-docker run --rm seqkit-workshop seqkit --help       # or docker compose run seqkit seqkit --help
-```
-
-4.1. Why is `--rm` useful when testing?
-
-**Working on an HPC (Workshop Reality):** \
-Docker requires root (administrator) privileges to run, which poses a massive security risk on shared High-Performance Computing (HPC) clusters. Therefore, HPCs use Apptainer (formerly named Singularity).
-
-Apptainer can download and run Docker images without requiring root privileges.
-
-The Problem: If we don't have root on the HPC, how do we build our Docker images?
-> The Solution: We will write the code, push it to GitHub, and let an automated GitHub workflow build it and push it to Docker Hub for us!
-
-------------------
-
-
-
-
-
-
-
-
-
-### 5. Building Your Own Containers
-You will work in groups. Each group is responsible for creating a working Docker container for one step of our RNA-seq workflow:
-1. Quality control --> ```FastQC``` and ```MultiQC```
-2. Read trimming --> ```trimmomatic```
-3. Alignment + quantification (pseudodalignment) --> ```Salmon```
-4. Differential expression analysis --> ```R + limma```
-
-### The workflow
-
-1. Write your Dockerfile: Your group will be given an incomplete or empty Dockerfile. Use the examples below to fill it out and make it working.
-2. Commit and Push: Push your completed Dockerfile to your group's specific branch on the workshop's GitHub repository.
-3. Wait for the Automated Build: Once pushed, a GitHub Action will automatically trigger. It will read your Dockerfile, build the image, and push it directly to Docker Hub. (Check the "Actions" tab in GitHub to watch it build!)
-4. Test on the HPC with Apptainer: Once the build is successful, log into the HPC. Use Apptainer to pull your new image from Docker Hub and test if the tool installed correctly by checking its version.
-
-### Testing Command Example
-Use this command to test your automatically built image on the HPC:
-```
-ml apptainer
-apptainer exec docker://hcemm/bioinfo-workshop:group_tag installed_tool --version
-```
-
-5.1. What is the difference between image and container?
-5.2. Why do we need containers in HPC?
-5.3. Why is reproducibility improved by containers?
-5.4. What happens if two tools require different Python versions?
-5.5. Could you fully reproduce a container without internet access?
-5.6. What is the weakest point of container reproducibility?
-
+--------------
 ## Answers
-
-
-
-|Group|Tool|DockerHub Tag|
-|------|--------|----------|
-| Group1 | FastQC + MultiQC | hcemm/bioinfo-workshop:fastqc|
-| Group2| trimmomatic | hcemm/bioinfo-workshop:trimming|
-| Group3 | salmon | hcemm/bioinfo-workshop:salmon|
-| Group4 | R + limma | hcemm/bioinfo-workshop:limma|
-
------------------------
-
-### 6. Example DockerFile
-
-```sh
-# 1. BASE IMAGE (Required)
-# Always start here. What OS or programming language environment do you need?
-FROM [base-image]:[version-tag]
-
-# 2. METADATA (Optional but good practice)
-# Add labels for author, version, or description.
-LABEL maintainer="[your-name]" \
-      description="[what-this-container-does]"
-
-# 3. ENVIRONMENT VARIABLES (Optional)
-# Set paths, locale settings, or flags (e.g., to stop interactive prompts during install).
-ENV [VARIABLE_NAME]="[value]"
-
-# 4. INSTALL DEPENDENCIES (Required)
-# Update the package manager, install your required tools, and CLEAN UP cache 
-# to keep the image size as small as possible. Combine into one RUN statement with &&.
-RUN [update-command] && \
-    [install-command] [dependency-1] [dependency-2] && \
-    [cleanup-command]
-
-# 5. WORKING DIRECTORY (Recommended)
-# Set the default directory where all subsequent commands will be run.
-# If it doesn't exist, Docker creates it.
-WORKDIR /[directory-name]
-
-# 6. ADD LOCAL FILES (Optional)
-# Copy scripts, code, or configuration files from your computer/repo into the container.
-COPY [local-path-to-file] [container-destination-path]
-
-# 7. EXECUTION COMMAND (Required)
-# The default command that runs when the container starts.
-# Use the "exec form" (JSON array) for cleaner signal handling.
-CMD ["[tool-or-executable]", "[flag]", "[argument]"]
-
-# (Alternative to CMD) 
-# Use ENTRYPOINT if the container is designed to run ONLY one specific tool, 
-# treating any extra arguments passed during 'docker run' as arguments for that tool.
-# ENTRYPOINT ["[tool-or-executable]"]
-```
-
-# Dockerfile directives vs Docker command-line options
-
-A Docker image is created in two stages:
-
-1. **Build time**: instructions in the `Dockerfile` create the image.
-2. **Run time**: command-line options modify how a container starts.
-
-Some things belong only in the Dockerfile (`RUN`, `COPY`, `ENV`, etc.), while others are runtime choices (`-v`, `--rm`, `--cpus`, etc.).
-
-The following example creates a small bioinformatics container.
-
-**Q: What would be the command-line equivalent to `FROM ubuntu:24.04`?**
-
----
-
-# Example Dockerfile
-
-```dockerfile
-FROM ubuntu:24.04
-
-LABEL description="A bioinformatics container"
-
-RUN apt-get update && \
-    apt-get install -y \
-        samtools \
-        bcftools \
-        wget \
-        && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /analysis
-
-COPY scripts/ /usr/local/bin/
-
-ENV TOOL_NAME="bio-container"
-
-VOLUME ["/data"]
-
-ENTRYPOINT ["bash"]
-```
-To build the image: `docker build -t bio .`
-
-
 
 3.1 Why is it better to use python:slim instead of full ubuntu? 
 
@@ -1014,23 +751,7 @@ remote downloads during build
 
 </details>
 
-# Exercises
 
-1. Pull your first BioContainer: biocontainers/samtools:1.20--h50ea8bc_1 (tip: to pull from dockerhub use docker://; to pull from quay use quay.io/biocontainers/)
-
-2. Inspect a container, and enter it's filesystem
-
-3. Pull a seqkit container, and run it to get stats on a FastQ file
-
-4. Create a file, and print it from inside the container
-
-5. Build an image from a Dockerfile, with bowtie2 available inside, and run it to explore its contents
-
-- (tip) bowtie2 requires build-essential, zlib1g-dev, libtbb-dev, and libsimde-dev
-- (tip) bowtie2 source code can be downloaded from GitHub
-- (tip) bowtie2 can be compiled with make
-
-6. Run the same image, but see a file from your own system
 
 ------------------
 |Previous|Home|Next|
