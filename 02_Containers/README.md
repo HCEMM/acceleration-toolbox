@@ -506,6 +506,33 @@ This separates the scientific workflow from the computing platform:
 --------------
 ## Answers
 
+2.1. What is the difference between an image and a container?
+
+<details> <summary><b>Answer</b></summary>
+A **container image** is a packaged, read-only template containing an application, its dependencies, and configuration. A **container** is a running instance created from that image.
+
+Multiple independent containers can be started from the same image.
+</details>
+    
+2.2. What information does an image tag provide?
+
+<details> <summary><b>Answer</b></summary>
+An image tag is a human-readable label used to identify a particular image variant or release, such as:
+
+```text
+samtools:1.20
+```
+Here, samtools is the image name and 1.20 is the tag. Tags frequently indicate a software version, build, operating-system variant, or architecture.
+However, tags can be changed or reassigned by the image publisher. They do not necessarily identify immutable image contents.
+</details>
+    
+2.3. Why is latest a poor choice for a reproducible analysis?
+
+<details> <summary><b>Answer</b></summary>
+The latest tag does not identify a fixed software version. A publisher can update it to point to a different image, causing the same command to retrieve different software at a later date.
+Use a versioned tag for better reproducibility
+</details>
+
 3.1 Why is it better to use python:slim instead of full ubuntu? 
 
 <details> <summary><b>Answer</b></summary>
