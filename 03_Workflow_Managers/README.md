@@ -8,7 +8,7 @@
 
 
 
-### 3.1. Why Use a Workflow Managers?
+### 1. Why Use a Workflow Managers?
 
 For a small analysis, you might run several commands manually. As the analysis grows, this approach becomes difficult to track and easy to perform incorrectly.
 
@@ -36,7 +36,7 @@ A shell script can run commands in a fixed order, but it does not automatically 
 
 -------------
 
-### 3.2. Workflows as Graphs
+### 2. Workflows as Graphs
 
 A computational workflow can be represented as a **directed acyclic graph**, commonly called a **DAG**.
 
@@ -63,6 +63,14 @@ From this graph, a workflow manager can determine:
 2. which tasks can run simultaneously;
 3. which outputs must be passed downstream; and
 4. which tasks may be reused after a failure.
+
+
+
+
+
+
+
+
 
 
 ### 3.3. Nextflow and Snakemake
