@@ -64,35 +64,84 @@ From this graph, a workflow manager can determine:
 3. which outputs must be passed downstream; and
 4. which tasks may be reused after a failure.
 
+### Check your understanding
+
+> 2.1. What do the nodes and edges represent in a workflow DAG?
+
+> 2.2. Why can the FastQC tasks run in parallel?
+
+> 2.3. Why must MultiQC wait for FastQC?
+
+<details>
+<summary><strong>Answers</strong></summary>
+
+**2.1.** Nodes represent computational tasks. Edges represent dependencies or data passed between tasks.
+
+**2.2.** Each FastQC task processes a separate sample and does not depend on another FastQC result.
+
+**2.3.** MultiQC uses the reports produced by FastQC, so those reports must be available first.
+
+</details>
 
 
 
+## 3. Core Workflow Concepts
+
+| Concept | Meaning | Nextflow example |
+|---|---|---|
+| **Process** | A reusable definition of a computational step | The definition of `FASTQC` |
+| **Task** | One execution of a process for a particular input | FastQC running for `sample_1.fastq.gz` |
+| **Channel** | A data stream connecting workflow components | A stream of FASTQ files |
+| **Executor** | The backend that runs or submits tasks | Local computer or Slurm |
+| **Software environment** | The packages required by a task | A container or Conda environment |
+| **Work directory** | An isolated directory used for a task | A subdirectory inside `work/` |
+
+One process can create many tasks. For example, supplying ten FASTQ files to one process can create ten independent task executions.
+
+A well-defined process declares:
+
+- its inputs;
+- its expected outputs;
+- the command to execute;
+- the required software environment; and
+- the required computational resources.
 
 
+> The process describes **what the analysis does**. Configuration files describe **where and how it runs**.
+
+```
+Process
+      ↓
+Resource request: 2 CPUs and 2 GB memory
+      ↓
+Executor
+      ├──→ Local computer
+      └──→ Slurm HPC
+```
+
+> This separation makes the workflow easier to move between computing environments.
 
 
-
-
-### 3.3. Nextflow and Snakemake
+### 4. Nextflow and Snakemake
 
 While there are many workflow systems, Nextflow and Snakemake are the two dominant players in bioinformatics. Both ensure reproducibility and scale seamlessly from local machines to massive computing clusters. However, they approach pipeline building differently.
 
 |<img width="568" alt="image" src="https://github.com/user-attachments/assets/471e9cf7-eb48-408f-b4c2-7b6466b2eeb9" />|<img width="568" height="174" alt="image" src="https://github.com/user-attachments/assets/f29d81dd-180c-45f4-a9d1-9e244ed5e54b" />|
 |--------------------|------------------|
 
-#### 3.3.1. Nextflow (Process-Oriented)
+#### 4.1. Nextflow (Process-Oriented)
 
 Nextflow is built around **processes** and **channels**. It focuses on how data flows from one step to the next. It has exceptionally strong native integration with container engines like Docker and Apptainer, making it ideal for scalable, production-level pipelines.
 
 > The conceptual model: "Take this input → process it → send the output downstream."
 
-#### 3.3.2. Snakemake (File-Oriented)
+#### 4.2. Snakemake (File-Oriented)
 
 Snakemake is built around **rules** and **files**. It defines relationships between input and output files using pattern matching (wildcards). Because it is built on top of Python, its syntax feels highly natural to Python developers.
 
 > The conceptual model: "To create this expected output file → run this rule on this input."
 
-#### 3.3.3. Comparison Overview
+#### 4.3. Comparison Overview
 
 | Feature        | Nextflow                  | Snakemake                |
 |----------------|--------------------------|--------------------------|
@@ -103,15 +152,15 @@ Snakemake is built around **rules** and **files**. It defines relationships betw
 | **Containers**     | Native & tightly integrated           | Supported                |
 | **Conda**            | Supported                | Native & tightly integrated           |
 
-### 3.4. Design Principles for Scalable Workflows
+### 4.4. Design Principles for Scalable Workflows
 
-#### 3.4.1. Separation of Concerns
+#### 4.4.1. Separation of Concerns
 
 A robust workflow explicitly separates the science from the software engineering:
 - Business Logic (The Science): Your individual scripts (Python, R, Bash) handle the actual computation and data manipulation.
 - Execution Logic (The Pipeline): The workflow manager decides when, where, and how to run those scripts.
 
-#### 3.4.2. The Scatter-Gather Pattern
+#### 4.4.2. The Scatter-Gather Pattern
 
 This is a fundamental pattern for parallelizing data science workflows:
 - Scatter: Split a large dataset into independent chunks (e.g., separating RNA-seq data by individual samples).
