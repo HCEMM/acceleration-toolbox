@@ -1,4 +1,4 @@
-## Chapter 3: Workflow Managers in Bioinformatics
+# Workflow Managers in Bioinformatics
 
 > Bioinformatics analyses rarely consist of a single command. A typical workflow may include quality control, trimming, alignment, quantification, statistical analysis, and visualization. Each step can use different software and may depend on files produced by an earlier step.
 > A **workflow manager** coordinates these steps so that an analysis can be executed consistently and efficiently.
