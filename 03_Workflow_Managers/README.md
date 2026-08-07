@@ -1,30 +1,64 @@
-## Chapter 3: Workflow Managers in Data Science
+## Chapter 3: Workflow Managers in Bioinformatics
 
-### 3.1. Beyond the Single Script: Why Workflow Managers?
+> Bioinformatics analyses rarely consist of a single command. A typical workflow may include quality control, trimming, alignment, quantification, statistical analysis, and visualization. Each step can use different software and may depend on files produced by an earlier step.
+> A **workflow manager** coordinates these steps so that an analysis can be executed consistently and efficiently.
 
-Modern data analysis, especially in bioinformatics, rarely consists of a single script. Instead, it requires stringing together multiple steps in a precise order, such as data cleaning, quality control, alignment, statistical analysis, and visualization. Each of these steps might rely on entirely different programming languages or software tools (e.g., Bash, Python, R).
+### 3.1. Why Use a Workflow Managers?
 
-For small projects, you might run these steps manually. But as workflows grow, a manual approach quickly becomes error-prone, hard to track, and difficult to reproduce.
+For a small analysis, you might run several commands manually. As the analysis grows, this approach becomes difficult to track and easy to perform incorrectly.
 
-Without automation, you are forced to manually:
-- Track which steps depends on which **exact inputs/outputs**.
-- Remember the **exact** execution order and commands.
-- Figure out which **steps** need to be re-run when an input file changes or a step fails mid-way.
+Without automation,  you must remember:
+- which command produced each file;
+- which outputs are required by later steps;
+- the correct execution order;
+- which samples can be processed in parallel;
+- which software versions and parameters were used; and
+- which steps must be repeated after a failure or input change.
+  
+A shell script can run commands in a fixed order, but it does not automatically understand dependencies, schedule independent tasks, request HPC resources, or reuse completed work.
 
-**Workflow managers** handle all of this execution logic for you. They allow you to define the rules of your pipeline once, automating execution and ensuring that your results are perfectly reproducible, whether you run them on a local laptop, an HPC cluster, or the cloud.
+> A workflow manager allows you to define the steps and their relationships. It then determines when and where each task should run.
 
-### 3.2. The Core Concept: Pipelines as Graphs
+### Main benefits
 
-A workflow is essentially a Directed Acyclic Graph (DAG).
-- Nodes = The tasks (scripts, tools, or commands).
-- Edges = The dependencies between those tasks (usually input and output files).
+**Automation:** The complete analysis can be launched with one command.
+- **Dependency tracking:** A task starts only when its required inputs are available.
+- **Parallel execution:** Independent samples or tasks can run simultaneously.
+- **Failure recovery:** Valid completed work can be reused when a workflow is resumed.
+- **Resource management:** Tasks can request appropriate CPUs, memory, and execution time.
+- **Portability:** The same workflow can run locally, on an HPC, or on supported cloud platforms.
+- **Software integration:** Each step can use a container or Conda environment.
+
+-------------
+
+### 3.2. Workflows as Graphs
+
+A computational workflow can be represented as a **directed acyclic graph**, commonly called a **DAG**.
+
+- A **node** represents a computational task.
+- An **edge** represents a dependency or data passed between tasks.
+- **Directed** means that data moves in a defined direction.
+- **Acyclic** means that the dependencies cannot form an endless loop.
 
 <img width="361" height="347" alt="image" src="https://github.com/user-attachments/assets/c14c2504-7789-4fc2-8b13-8d61a3c5ad31" />
 
-By mapping out your pipeline as a DAG, workflow managers can:
-1. Determine execution order: Automatically figure out what needs to run first.
-2. Run in parallel: Identify tasks that do not depend on each other and execute them simultaneously to save time.
-3. Perform smart re-runs: If a pipeline fails at step 4, or if you update the data for step 4, the workflow manager resumes from there, skipping the successful steps 1-3.
+**Consider a simple quality-control workflow:**
+
+```
+                      ┌──→ FastQC(sample_1) ──┐
+FASTQ files ──scatter─┼──→ FastQC(sample_2) ──┼──gather──→ MultiQC
+                      └──→ FastQC(sample_3) ──┘
+```
+
+> The FastQC tasks are independent, so they can run in parallel. MultiQC must wait because it requires the reports produced by FastQC.
+
+From this graph, a workflow manager can determine:
+
+1. which tasks are ready to run;
+2. which tasks can run simultaneously;
+3. which outputs must be passed downstream; and
+4. which tasks may be reused after a failure.
+
 
 ### 3.3. Nextflow and Snakemake
 
