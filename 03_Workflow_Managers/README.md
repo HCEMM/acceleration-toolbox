@@ -3,6 +3,11 @@
 > Bioinformatics analyses rarely consist of a single command. A typical workflow may include quality control, trimming, alignment, quantification, statistical analysis, and visualization. Each step can use different software and may depend on files produced by an earlier step.
 > A **workflow manager** coordinates these steps so that an analysis can be executed consistently and efficiently.
 
+<img width="1879" height="713" alt="image" src="https://github.com/user-attachments/assets/ee59cbd1-a586-41fa-aae9-e83230d6ece2" />
+
+
+
+
 ### 3.1. Why Use a Workflow Managers?
 
 For a small analysis, you might run several commands manually. As the analysis grows, this approach becomes difficult to track and easy to perform incorrectly.
